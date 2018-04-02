@@ -38,7 +38,7 @@ class ViewController: UIViewController {
             count = count - 1
             
         }
-        //count의 값만큼의 사진 이름을 불러드림
+        //count의 값만큼의 사진 이름을 불러드린다
         imageView.image = UIImage(named: "frame\(count).png");
         label.text = String(count)
     }
