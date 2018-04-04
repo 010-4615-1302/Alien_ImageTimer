@@ -10,33 +10,46 @@ import UIKit
 
 class ViewController: UIViewController {
     var count = 1; //사진의 인덱스 값 증가
-    var direction = 1; //direction가 1이면 증가 0이면 감소
+    var mytimer = Timer(); //타이머 추가
+    var set = true
+    var but = true
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var play: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        //어플 실행할때 이미지를 처음 삽입
         imageView.image = UIImage(named: "frame1.png")
     }
-    @IBAction func imageUpdate(_ sender: Any) {
-        //count가 5이면 direction를 0로 변경
-        if count == 5{
-            direction  = 0;
+    
+    @IBAction func play(_ sender: Any) {
+        if but == true{ //but이 참 : 타이머가 실행 하지 않았을때 실행
+        mytimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(doAnimation), userInfo: nil, repeats: true)
+            //타이머가 1초마다 doAnimation를 종료 할때까지 계속 반복
+            but = false //종료를 하기 위해 but를 거짓으로변경
+            play.setTitle("Stop", for: .normal) //버튼의 제목을 변경
         }
-        //count가 1이면 direction를 1로 변경
+        else if but == false{
+            //but이 거짓 : 타이머가 실행 했을때 실행
+            mytimer.invalidate()
+            //타이머 정지
+            but = true //다시 실행을 하기위해 but를 참으로 변경
+            play.setTitle("Play", for: .normal)//버튼의 제목을 변경
+        }
+    }
+    
+    @objc func doAnimation(){
+        if count == 5{ //count가 5이면 set을 거짓으로변경
+            set = false
+        }
         else if count == 1{
-        direction = 1
+            set = true //count가 1이면 set을 참으로변경
         }
-        //direction가 1이면 count를 1씩 증가
-        if direction  == 1 {
-            count += 1
-            
+        if set == true{ //set이 참이면 카운터를 1씩 증가
+            count = count + 1
         }
-        //direction가 1이면 count를 1씩 감소
-        else if direction  == 0 {
+        else if set == false{ //set이 거짓이면 카운터를 1씩 감소
             count = count - 1
-            
         }
         //count의 값만큼의 사진 이름을 불러드린다
         imageView.image = UIImage(named: "frame\(count).png");
